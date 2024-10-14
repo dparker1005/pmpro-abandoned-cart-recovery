@@ -1,0 +1,425 @@
+<?php
+
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
+
+class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
+	/**
+	 * The text domain of this plugin.
+	 *
+	 * @since TBD
+	 *
+	 * @access   private
+	 * @var      string    $plugin_text_domain    The text domain of this plugin.
+	 */
+	protected $plugin_text_domain;
+
+	/**
+	 * Call the parent constructor to override the defaults $args
+	 *
+	 * @param string $plugin_text_domain    Text domain of the plugin.
+	 *
+	 * @since TBD
+	 */
+	public function __construct() {
+
+		$this->plugin_text_domain = 'pmpro-abandoned-cart-recovery';
+
+		parent::__construct(
+			array(
+				'plural'   => 'recovery attempts',
+				// Plural value used for labels and the objects being listed.
+				'singular' => 'recovery attempt',
+				// Singular label for an object being listed, e.g. 'post'.
+				'ajax'     => false,
+				// If true, the parent class will call the _js_vars() method in the footer
+			)
+		);
+	}
+
+	/**
+	 * Sets up screen options for the discount codes list table.
+	 *
+	 * @since 3.0
+	 */
+	public static function hook_screen_options() {
+		$list_table = new PMProACR_Recovery_Attempts_List_Table();
+		add_screen_option(
+			'per_page',
+			array(
+				'default' => 20,
+				'label'   => __( 'Recovery attempts per page', 'pmpro-abandoned-cart-recovery' ),
+				'option'  => 'pmproacr_recovery_attempts_per_page',
+			)
+		);
+		add_filter(
+			'screen_settings',
+			array(
+				$list_table,
+				'screen_controls',
+			),
+			10,
+			2
+		);
+		add_filter(
+			'set-screen-option',
+			array(
+				$list_table,
+				'set_screen_option',
+			),
+			10,
+			3
+		);
+		set_screen_options();
+	}
+
+	/**
+	 * Sets the screen options.
+	 *
+	 * @param string $dummy   Unused.
+	 * @param string $option  Screen option name.
+	 * @param string $value   Screen option value.
+	 * @return string
+	 */
+	public function set_screen_option( $dummy, $option, $value ) {
+		if ( 'pmproacr_recovery_attempts_per_page' === $option ) {
+			return $value;
+		} else {
+			return $dummy;
+		}
+	}
+
+	/**
+	 * Prepares the list of items for displaying.
+	 *
+	 * Query, filter data, handle sorting, and pagination, and any other data-manipulation required prior to rendering
+	 *
+	 * @since TBD
+	 */
+	public function prepare_items() {
+		
+		$columns = $this->get_columns();
+        $sortable = $this->get_sortable_columns();
+
+		$this->_column_headers = array($columns, array(), $sortable);
+
+		$this->items = $this->sql_table_data();
+
+		$items_per_page = $this->get_items_per_page( 'pmproacr_recovery_attempts_per_page' );
+		$total_items = $this->sql_table_data( true );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $items_per_page,
+				'total_pages' => ceil( $total_items / $items_per_page ),
+			)
+		);
+		
+	}
+
+	/**
+	 * Get a list of columns.
+	 *
+	 * The format is: 'internal-name' => 'Title'
+	 *
+	 * @since TBD
+	 *
+	 * @return array
+	 */
+	public function get_columns() {
+
+		$columns = array(
+            'id'              => __( 'ID', 'pmpro-abandoned-cart-recovery' ),
+			'user'            => __( 'User', 'pmpro-abandoned-cart-recovery' ),
+            'token_order'     => __( 'Token Order', 'pmpro-abandoned-cart-recovery' ),
+            'status'          => __( 'Status', 'pmpro-abandoned-cart-recovery' ),
+            'reminder_1'      => __( 'Reminder 1', 'pmpro-abandoned-cart-recovery' ),
+            'reminder_2'      => __( 'Reminder 2', 'pmpro-abandoned-cart-recovery' ),
+            'reminder_3'      => __( 'Reminder 3', 'pmpro-abandoned-cart-recovery' ),
+            'recovered_order' => __( 'Recovered Order', 'pmpro-abandoned-cart-recovery' ),
+		);
+
+		return $columns;
+	}
+
+	/**
+	 * Get a list of sortable columns. The format is:
+	 * 'internal-name' => 'orderby'
+	 * or
+	 * 'internal-name' => array( 'orderby', true )
+	 *
+	 * The second format will make the initial sorting order be descending
+	 *
+	 * @since TBD
+	 *
+	 * @return array
+	 */
+	protected function get_sortable_columns() {
+		/**
+		 * actual sorting still needs to be done by prepare_items.
+		 * specify which columns should have the sort icon.
+		 *
+		 * key => value
+		 * column name_in_list_table => columnname in the db
+		 */
+		$sortable_columns = array(
+			'id' => array( 'id', true ),
+			'user' => array( 'user_id', false ),
+		);
+		
+		return $sortable_columns;
+	}
+
+	/**
+	 * Text displayed when no user data is available
+	 *
+	 * @since TBD
+	 *
+	 * @return void
+	 */
+	public function no_items() {
+			
+		esc_html_e( 'No recovery attempts found.', 'pmpro-abandoned-cart-recovery' );
+
+	}
+
+	/**
+	 * Get the table data
+	 *
+	 * @return Array|integer if $count parameter = true
+	 */
+	private function sql_table_data( $count = false ) {
+
+		global $wpdb;
+
+		// some vars for pagination
+		if( isset( $_REQUEST['paged'] ) ) {
+			$pn = intval( $_REQUEST['paged'] );
+		} else {
+			$pn = 1;
+		}
+		
+		$limit = $this->get_items_per_page( 'pmproacr_recovery_attempts_per_page' );
+
+		$end = $pn * $limit;
+		$start = $end - $limit;
+
+		if ( $count ) {
+			$sqlQuery = "SELECT COUNT( DISTINCT id ) FROM $wpdb->pmproacr_recovery_attempts ";
+		} else {
+			$sqlQuery = "SELECT * FROM $wpdb->pmproacr_recovery_attempts ";			
+		}
+
+		if ( ! $count ) {
+
+			if( isset( $_REQUEST['orderby'] ) ) {
+				$orderby = $this->sanitize_orderby( sanitize_text_field( $_REQUEST['orderby'] ) );
+			} else {
+				$orderby = 'id';
+			}
+
+			if( isset( $_REQUEST['order'] ) && $_REQUEST['order'] == 'asc' ) {
+				$order = 'ASC';
+			} else {
+				$order = 'DESC';
+			}
+
+			//Ordering needs to happen here
+			$sqlQuery .= "ORDER BY `$orderby` $order ";
+			
+			$sqlQuery .= "LIMIT " . esc_sql( $start ) . "," .  esc_sql( $limit );
+		}
+
+		if( $count ) {
+			$sql_table_data = $wpdb->get_var( $sqlQuery );
+		} else {
+			$sql_table_data = $wpdb->get_results( $sqlQuery );
+		}
+
+		return $sql_table_data;
+	}
+
+	/**
+	 * Sanitize the orderby value.
+	 * Only allow fields we want to order by.
+	 * Make sure we append the correct table prefix.
+	 * Make sure there is no other SQL in the value.
+	 * @param string $orderby The column to order by.
+	 * @return string The sanitized value.
+	 */
+	function sanitize_orderby( $orderby ) {
+		$allowed_orderbys = array(
+			'id'      => 'id',
+			'user_id' => 'user_id',
+		);
+
+	 	if ( ! empty( $allowed_orderbys[$orderby] ) ) {
+			$orderby = $allowed_orderbys[$orderby];
+		} else {
+			$orderby = false;
+		}
+
+		return $orderby;
+	}
+
+	/**
+	 * Render a column when no column specific method exists.
+	 *
+	 * @param object $item
+	 * @param string $column_name
+	 *
+	 * @return mixed
+	 */
+	public function column_default( $item, $column_name ) {
+		if ( property_exists( $item, $column_name ) ) {
+			echo esc_html( $item->$column_name );
+		}
+	}
+
+    /**
+     * Render the user value.
+     *
+     * @param object $item
+     */
+    public function column_user( $item ) {
+        $user = get_userdata( $item->user_id );
+        if ( ! empty( $user ) ) { 
+			echo '<a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-member', 'user_id' => (int)$user->ID ), admin_url( 'admin.php' ) ) ) . '">' . esc_html( $user->user_login ) . '</a><br />';
+			echo esc_html( $user->user_email );
+		 } elseif ( $item->user_id > 0 ) {
+			echo '['. esc_html__( 'deleted', 'pmpro-abandoned-cart-recovery' ) . ']';
+		} else {
+			echo '['. esc_html__( 'none', 'pmpro-abandoned-cart-recovery' ) . ']';
+		}
+    }
+
+    /**
+     * Render the token order value.
+     *
+     * @param object $item
+     */
+    public function column_token_order( $item ) {
+        self::ouptut_order_data( $item->token_order_id );
+    }
+
+    /**
+     * Render the status value.
+     *
+     * @param object $item
+     */
+    public function column_status( $item ) {
+        if ( $item->status === 'in_progress' ) {
+            esc_html_e( 'In Progress', 'pmpro-abandoned-cart-recovery' );
+        } elseif ( $item->status === 'recovered' ) {
+            esc_html_e( 'Recovered', 'pmpro-abandoned-cart-recovery' );
+        } elseif ( $item->status === 'lost' ) {
+            esc_html_e( 'Lost', 'pmpro-abandoned-cart-recovery' );
+        } else {
+            esc_html_e( 'Unknown', 'pmpro-abandoned-cart-recovery' );
+        }
+    }
+
+    /**
+     * Render the reminder 1 value.
+     *
+     * @param object $item
+     */
+    public function column_reminder_1( $item ) {
+        $reminder = $item->reminder_1_datetime;
+        if ( $reminder ) {
+			echo esc_html( self::format_date( $reminder ) );
+        } else {
+            esc_html_e( 'Not sent', 'pmpro-abandoned-cart-recovery' );
+        }
+    }
+
+    /**
+     * Render the reminder 2 value.
+     *
+     * @param object $item
+     */
+    public function column_reminder_2( $item ) {
+        $reminder = $item->reminder_2_datetime;
+        if ( $reminder ) {
+			// Output the reminder date in the site's local time and date format and the correct timezone.
+			echo esc_html( self::format_date( $reminder ) );
+        } else {
+            esc_html_e( 'Not sent', 'pmpro-abandoned-cart-recovery' );
+        }
+    }
+
+    /**
+     * Render the reminder 3 value.
+     *
+     * @param object $item
+     */
+    public function column_reminder_3( $item ) {
+        $reminder = $item->reminder_3_datetime;
+        if ( $reminder ) {
+			echo esc_html( self::format_date( $reminder ) );
+        } else {
+            esc_html_e( 'Not sent', 'pmpro-abandoned-cart-recovery' );
+        }
+    }
+
+    /**
+     * Render the recovered order value.
+     *
+     * @param object $item
+     */
+    public function column_recovered_order( $item ) {
+        $order = new MemberOrder( $item->recovered_order_id );
+        if ( $order->id ) {
+            self::ouptut_order_data( $order->id );
+        } else {
+            esc_html_e( 'Not recovered', 'pmpro-abandoned-cart-recovery' );
+        }
+    }
+
+    /**
+     * Helper function to output an order's timestamp, level, and total.
+     *
+     * @param int $order_id The order ID.
+     */
+    public static function ouptut_order_data( $order_id ) {
+        // Get the order.
+        $order = MemberOrder::get_order( $order_id );
+        if ( empty( $order ) ) {
+            echo esc_html( printf( __( 'Order #%d not found.', 'pmpro-abandoned-cart-recovery' ), $order_id ) );
+        }
+
+        // Output the order data.
+        // The level being purchased should show on top with the total in parentheses and the timestamp below.
+        $level = pmpro_getLevel( $order->membership_id );
+        $level_name = ! empty( $level ) ? $level->name : '#' . $order->membership_id;
+        echo '<p>' . esc_html( sprintf( __( 'Level: %s (%s)', 'pmpro-abandoned-cart-recovery' ), $level_name, pmpro_formatPrice( $order->total ) ) ) . '</p>';
+		echo '<p>' . esc_html( self::format_date( $order->getTimestamp() ) ) . '</p>';
+		// Show an edit link.
+		echo '<p><a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-orders', 'order' => $order->id ), admin_url( 'admin.php' ) ) ) . '">' . esc_html__( 'View Order', 'pmpro-abandoned-cart-recovery' ) . '</a></p>';
+    }
+
+	/**
+	 * Format the passed date for display.
+	 *
+	 * @param string|int $date The date to format in Y-m-d H:i:s or timestamp format.
+	 * @return string The formatted date.
+	 */
+	public static function format_date( $date ) {
+		if ( is_numeric( $date ) ) {
+			return sprintf(
+				// translators: %1$s is the date and %2$s is the time.
+				__( '%1$s at %2$s', 'pmpro-abandoned-cart-recover' ),
+				date_i18n( get_option( 'date_format' ), $date ),
+				date_i18n( get_option( 'time_format' ), $date )
+			);
+		} else {
+			return sprintf(
+				// translators: %1$s is the date and %2$s is the time.
+				__( '%1$s at %2$s', 'pmpro-abandoned-cart-recover' ),
+				get_date_from_gmt( $date, get_option( 'date_format' ) ),
+				get_date_from_gmt( $date, get_option( 'time_format' ) )
+			);
+		}
+	}
+}
