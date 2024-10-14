@@ -50,13 +50,6 @@ function pmproacr_cron_process_recovery_attempts() {
 	 */
 	$seconds_until_lost       = (int) apply_filters( 'pmproacr_time_until_lost', DAY_IN_SECONDS * 7 );
 
-	// For testing
-	$seconds_until_reminder_1 = 30;
-	$seconds_until_reminder_2 = 30;
-	$seconds_until_reminder_3 = 30;
-	$seconds_until_lost       = 30;
-
-
 	// Send the first reminder.
 	// Get all token orders older than the current time - seconds_until_reminder_1 but after the last timestamp checked.
 	// To help with performance and to avoid confusing customers, let's limit the "last timestamp checked" to at most $seconds_until_reminder_1 * 4 in the past.
