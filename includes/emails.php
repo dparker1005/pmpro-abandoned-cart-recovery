@@ -49,7 +49,6 @@ function pmproacr_send_reminder_email( $recovery_attempt, $reminder_number ) {
 	// Send the email.
 	$email           = new PMProEmail();
 	$email->template = 'pmproacr_reminder_' . $reminder_number;
-	error_log( 'pmproacr_send_reminder_email: ' . $email->template );
 	$email->email    = $user->user_email;
 	$email->data     = array(
 		'user_login' => $user->user_login,
