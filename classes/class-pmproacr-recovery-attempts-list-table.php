@@ -300,7 +300,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
      * @param object $item
      */
     public function column_token_order( $item ) {
-        self::ouptut_order_data( $item->token_order_id );
+        self::ouptut_order_data( $item->token_order_id, $item->token_level_id, $item->token_total, $item->token_datetime );
     }
 
     /**
@@ -369,9 +369,8 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
      * @param object $item
      */
     public function column_recovered_order( $item ) {
-        $order = new MemberOrder( $item->recovered_order_id );
-        if ( $order->id ) {
-            self::ouptut_order_data( $order->id );
+        if ( ! empty( $item->recovered_order_id ) ) {
+            self::ouptut_order_data( $item->recovered_order_id, $item->recovered_level_id, $item->recovered_total, $item->recovered_datetime );
         } else {
             esc_html_e( 'Not recovered', 'pmpro-abandoned-cart-recovery' );
         }
@@ -382,21 +381,13 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
      *
      * @param int $order_id The order ID.
      */
-    public static function ouptut_order_data( $order_id ) {
-        // Get the order.
-        $order = MemberOrder::get_order( $order_id );
-        if ( empty( $order ) ) {
-            echo esc_html( printf( __( 'Order #%d not found.', 'pmpro-abandoned-cart-recovery' ), $order_id ) );
-        }
-
-        // Output the order data.
-        // The level being purchased should show on top with the total in parentheses and the timestamp below.
-        $level = pmpro_getLevel( $order->membership_id );
-        $level_name = ! empty( $level ) ? $level->name : '#' . $order->membership_id;
-        echo '<p>' . esc_html( sprintf( __( 'Level: %s (%s)', 'pmpro-abandoned-cart-recovery' ), $level_name, pmpro_formatPrice( $order->total ) ) ) . '</p>';
-		echo '<p>' . esc_html( self::format_date( $order->getTimestamp() ) ) . '</p>';
+    public static function ouptut_order_data( $order_id, $level_id, $total, $datetime ) {
+        $level = pmpro_getLevel( $level_id );
+        $level_name = ! empty( $level ) ? $level->name : '#' . $level_id;
+        echo '<p>' . esc_html( sprintf( __( 'Level: %s (%s)', 'pmpro-abandoned-cart-recovery' ), $level_name, pmpro_formatPrice( $total ) ) ) . '</p>';
+		echo '<p>' . esc_html( self::format_date( $datetime ) ) . '</p>';
 		// Show an edit link.
-		echo '<p><a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-orders', 'order' => $order->id ), admin_url( 'admin.php' ) ) ) . '">' . esc_html__( 'View Order', 'pmpro-abandoned-cart-recovery' ) . '</a></p>';
+		echo '<p><a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-orders', 'order' => $order_id ), admin_url( 'admin.php' ) ) ) . '">' . esc_html__( 'View Order', 'pmpro-abandoned-cart-recovery' ) . '</a></p>';
     }
 
 	/**
@@ -406,20 +397,11 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 	 * @return string The formatted date.
 	 */
 	public static function format_date( $date ) {
-		if ( is_numeric( $date ) ) {
-			return sprintf(
-				// translators: %1$s is the date and %2$s is the time.
-				__( '%1$s at %2$s', 'pmpro-abandoned-cart-recover' ),
-				date_i18n( get_option( 'date_format' ), $date ),
-				date_i18n( get_option( 'time_format' ), $date )
-			);
-		} else {
-			return sprintf(
-				// translators: %1$s is the date and %2$s is the time.
-				__( '%1$s at %2$s', 'pmpro-abandoned-cart-recover' ),
-				get_date_from_gmt( $date, get_option( 'date_format' ) ),
-				get_date_from_gmt( $date, get_option( 'time_format' ) )
-			);
-		}
+		return sprintf(
+			// translators: %1$s is the date and %2$s is the time.
+			__( '%1$s at %2$s', 'pmpro-abandoned-cart-recover' ),
+			get_date_from_gmt( $date, get_option( 'date_format' ) ),
+			get_date_from_gmt( $date, get_option( 'time_format' ) )
+		);
 	}
 }
