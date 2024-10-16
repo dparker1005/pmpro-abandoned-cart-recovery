@@ -11,7 +11,7 @@ function pmproacr_admin_add_page() {
 		__( 'Abandoned Cart Recovery', 'pmpro-abandoned-cart-recovery' ),
 		__( 'Abandoned Cart Recovery', 'pmpro-abandoned-cart-recovery' ),
 		'manage_options',
-		'pmproacr',
+		'pmpro-acr',
 		'pmproacr_admin_page'
 	);
 }
@@ -29,7 +29,6 @@ function pmproacr_admin_page() {
 	require_once PMPRO_DIR . '/adminpages/admin_header.php';
 
 	?>
-	<hr class="wp-header-end">
 	<h1><?php esc_html_e( 'Abandoned Cart Recovery', 'pmpro-abandoned-cart-recovery' ); ?></h1>
 	<?php
 	$recovery_attempts_list_table->display();
