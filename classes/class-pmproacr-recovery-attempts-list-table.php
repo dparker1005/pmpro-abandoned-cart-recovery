@@ -39,7 +39,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Sets up screen options for the discount codes list table.
+	 * Sets up screen options for the abandoned cart recovery list table.
 	 *
 	 * @since 3.0
 	 */
