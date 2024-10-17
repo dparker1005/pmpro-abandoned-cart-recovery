@@ -6,7 +6,7 @@
  * @since TBD
  */
 function pmproacr_admin_add_page() {
-	add_submenu_page(
+	$recovery_attempts_list_table_hook = add_submenu_page(
 		'pmpro-dashboard',
 		__( 'Abandoned Cart Recovery', 'pmpro-abandoned-cart-recovery' ),
 		__( 'Abandoned Cart Recovery', 'pmpro-abandoned-cart-recovery' ),
@@ -14,6 +14,7 @@ function pmproacr_admin_add_page() {
 		'pmpro-acr',
 		'pmproacr_admin_page'
 	);
+	add_action( 'load-' . $recovery_attempts_list_table_hook, 'PMProACR_Recovery_Attempts_List_Table::hook_screen_options' );
 }
 add_action( 'admin_menu', 'pmproacr_admin_add_page' );
 
