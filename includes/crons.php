@@ -269,4 +269,4 @@ register_activation_hook( PMPROACR_BASE_FILE, 'pmproacr_activation' );
 function pmproacr_deactivation() {	
 	wp_clear_scheduled_hook( 'pmproacr_cron_process_recovery_attempts' );
 }
-register_deactivation_hook( PMPROACR_BASE_FILE, 'pmpro_deacpmproacr_deactivationtivation' );
+register_deactivation_hook( PMPROACR_BASE_FILE, 'pmproacr_deactivation' );
