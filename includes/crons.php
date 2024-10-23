@@ -98,7 +98,7 @@ function pmproacr_cron_process_recovery_attempts() {
 			$wpdb->prepare(
 				"SELECT o.id, o.user_id, o.membership_id, o.total, o.timestamp, o.status
 				FROM $wpdb->pmpro_membership_orders o
-				WHERE o.user_id = %d AND o.timestamp > %s
+				WHERE o.user_id = %d AND o.timestamp > %s AND o.membership_id IN(" . implode( ',', $enabled_levels ) . ")
 				ORDER BY o.timestamp DESC",
 				$token_order->user_id,
 				$reminder_1_datetime_lower_bound
@@ -185,6 +185,17 @@ function pmproacr_cron_process_recovery_attempts() {
 		)
 	);
 	foreach( $reminder_2_recovery_attempts as $recovery_attempt ) {
+		// Check if the level for this recovery attempt is still enabled.
+		if ( ! in_array( $recovery_attempt->token_level_id, $enabled_levels ) ) {
+			// Update the recovery attempt.
+			$wpdb->update(
+				$wpdb->pmproacr_recovery_attempts,
+				array( 'status' => 'lost' ),
+				array( 'id' => $recovery_attempt->id )
+			);
+			continue;
+		}
+
 		// Send email to user.
 		pmproacr_send_reminder_email( $recovery_attempt, 2 );
 
@@ -212,6 +223,17 @@ function pmproacr_cron_process_recovery_attempts() {
 		)
 	);
 	foreach( $reminder_3_recovery_attempts as $recovery_attempt ) {
+		// Check if the level for this recovery attempt is still enabled.
+		if ( ! in_array( $recovery_attempt->token_level_id, $enabled_levels ) ) {
+			// Update the recovery attempt.
+			$wpdb->update(
+				$wpdb->pmproacr_recovery_attempts,
+				array( 'status' => 'lost' ),
+				array( 'id' => $recovery_attempt->id )
+			);
+			continue;
+		}
+
 		// Send email to user.
 		pmproacr_send_reminder_email( $recovery_attempt, 3 );
 
