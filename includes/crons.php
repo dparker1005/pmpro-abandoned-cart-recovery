@@ -79,6 +79,13 @@ function pmproacr_cron_process_recovery_attempts() {
 
 	// Loop through orders and start a recovery attempt when needed.
 	foreach ( $reminder_1_token_orders as $token_order ) {
+		// If the user has opted out of recovery attempts, then skip this order.
+		$opted_out = get_user_meta( $token_order->user_id, 'pmproacr_opt_out', true );
+		if ( ! empty( $opted_out ) ) {
+			update_option( 'pmproacr_last_datetime_checked', $token_order->timestamp );
+			continue;
+		}
+
 		// If the user already has a recovery attempt in progress, then skip this order.
 		$existing_recovery_attempt = $wpdb->get_row(
 			$wpdb->prepare(
