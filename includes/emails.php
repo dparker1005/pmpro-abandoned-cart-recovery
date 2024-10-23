@@ -63,7 +63,7 @@ function pmproacr_send_reminder_email( $recovery_attempt, $reminder_number ) {
 		'membership_level_name' => $level->name,
 		'checkout_url' => pmpro_login_url( pmpro_url( 'checkout', '?pmpro_level=' . $level->id ) ),
 		'levels_url' => pmpro_login_url( pmpro_url( 'levels' ) ),
-		'opt_out_url' => add_query_arg( 'pmproacr_opt_out', $user->user_email, home_url() ),
+		'opt_out_url' => add_query_arg( 'pmproacr_opt_out', urlencode( $user->user_email ), home_url() ),
 	);
 	$email->sendEmail();
 }

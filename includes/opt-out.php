@@ -14,7 +14,7 @@ function pmproacr_process_opt_out() {
 
 	// $_REQUEST['pmproacr_opt_out'] is the email address to opt out.
 	// We need to get the user ID from the email address.
-	$user = get_user_by( 'email', sanitize_email( $_REQUEST['pmproacr_opt_out'] ) );
+	$user = get_user_by( 'email', stripslashes( sanitize_email( $_REQUEST['pmproacr_opt_out'] ) ) );
 	if ( ! $user ) {
 		// Show a banner that the opt-out has failed.
 		add_action( 'wp_footer', 'pmproacr_show_opt_out_failed_banner' );
@@ -43,7 +43,7 @@ add_action( 'wp', 'pmproacr_process_opt_out' );
  */
 function pmproacr_show_opt_out_banner() {
 	// $_REQUEST['pmproacr_opt_out'] is the email address to opt out.
-	$email = sanitize_email( $_REQUEST['pmproacr_opt_out'] );
+	$email = stripslashes( sanitize_email( $_REQUEST['pmproacr_opt_out'] ) );
 
 	// Show the banner.
 	?>
@@ -60,7 +60,7 @@ function pmproacr_show_opt_out_banner() {
  */
 function pmproacr_show_opt_out_failed_banner() {
 	// $_REQUEST['pmproacr_opt_out'] is the email address to opt out.
-	$email = sanitize_email( $_REQUEST['pmproacr_opt_out'] );
+	$email = stripslashes( sanitize_email( $_REQUEST['pmproacr_opt_out'] ) );
 
 	// Show the banner.
 	?>
