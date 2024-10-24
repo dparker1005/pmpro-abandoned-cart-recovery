@@ -48,7 +48,7 @@ function pmproacr_cron_process_recovery_attempts() {
 	 *
 	 * @param int $seconds_until_lost The time in seconds until the order is marked as lost.
 	 */
-	$seconds_until_lost       = (int) apply_filters( 'pmproacr_time_until_lost', DAY_IN_SECONDS * 7 );
+	$seconds_until_lost = (int) apply_filters( 'pmproacr_time_until_lost', DAY_IN_SECONDS * 7 );
 
 	// Get all levels that have abandoned cart recovery enabled.
 	$enabled_levels = $wpdb->get_col(

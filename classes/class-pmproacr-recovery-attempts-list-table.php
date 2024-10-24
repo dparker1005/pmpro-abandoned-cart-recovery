@@ -10,15 +10,15 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 	 *
 	 * @since TBD
 	 *
-	 * @access   private
-	 * @var      string    $plugin_text_domain    The text domain of this plugin.
+	 * @access private
+	 * @var string $plugin_text_domain	The text domain of this plugin.
 	 */
 	protected $plugin_text_domain;
 
 	/**
 	 * Call the parent constructor to override the defaults $args
 	 *
-	 * @param string $plugin_text_domain    Text domain of the plugin.
+	 * @param string $plugin_text_domain Text domain of the plugin.
 	 *
 	 * @since TBD
 	 */
@@ -32,7 +32,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 				// Plural value used for labels and the objects being listed.
 				'singular' => 'recovery attempt',
 				// Singular label for an object being listed, e.g. 'post'.
-				'ajax'     => false,
+				'ajax'	 => false,
 				// If true, the parent class will call the _js_vars() method in the footer
 			)
 		);
@@ -41,7 +41,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 	/**
 	 * Sets up screen options for the abandoned cart recovery list table.
 	 *
-	 * @since 3.0
+	 * @since TBD
 	 */
 	public static function hook_screen_options() {
 		$list_table = new PMProACR_Recovery_Attempts_List_Table();
@@ -100,7 +100,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 	public function prepare_items() {
 		
 		$columns = $this->get_columns();
-        $sortable = $this->get_sortable_columns();
+		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array($columns, array(), $sortable);
 
@@ -111,7 +111,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total_items,
-				'per_page'    => $items_per_page,
+				'per_page'	=> $items_per_page,
 				'total_pages' => ceil( $total_items / $items_per_page ),
 			)
 		);
@@ -130,14 +130,14 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 	public function get_columns() {
 
 		$columns = array(
-            'id'              => __( 'ID', 'pmpro-abandoned-cart-recovery' ),
-			'user'            => __( 'User', 'pmpro-abandoned-cart-recovery' ),
-            'token_order'     => __( 'Token Order', 'pmpro-abandoned-cart-recovery' ),
-            'status'          => __( 'Status', 'pmpro-abandoned-cart-recovery' ),
-            'reminder_1'      => __( 'Reminder 1', 'pmpro-abandoned-cart-recovery' ),
-            'reminder_2'      => __( 'Reminder 2', 'pmpro-abandoned-cart-recovery' ),
-            'reminder_3'      => __( 'Reminder 3', 'pmpro-abandoned-cart-recovery' ),
-            'recovered_order' => __( 'Recovered Order', 'pmpro-abandoned-cart-recovery' ),
+			'id'			  => __( 'ID', 'pmpro-abandoned-cart-recovery' ),
+			'user'			=> __( 'User', 'pmpro-abandoned-cart-recovery' ),
+			'token_order'	 => __( 'Token Order', 'pmpro-abandoned-cart-recovery' ),
+			'status'		  => __( 'Status', 'pmpro-abandoned-cart-recovery' ),
+			'reminder_1'	  => __( 'Reminder 1', 'pmpro-abandoned-cart-recovery' ),
+			'reminder_2'	  => __( 'Reminder 2', 'pmpro-abandoned-cart-recovery' ),
+			'reminder_3'	  => __( 'Reminder 3', 'pmpro-abandoned-cart-recovery' ),
+			'recovered_order' => __( 'Recovered Order', 'pmpro-abandoned-cart-recovery' ),
 		);
 
 		return $columns;
@@ -250,7 +250,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 	 */
 	function sanitize_orderby( $orderby ) {
 		$allowed_orderbys = array(
-			'id'      => 'id',
+			'id'	  => 'id',
 			'user_id' => 'user_id',
 		);
 
@@ -277,14 +277,14 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 		}
 	}
 
-    /**
-     * Render the user value.
-     *
-     * @param object $item
-     */
-    public function column_user( $item ) {
-        $user = get_userdata( $item->user_id );
-        if ( ! empty( $user ) ) { 
+	/**
+	 * Render the user value.
+	 *
+	 * @param object $item
+	 */
+	public function column_user( $item ) {
+		$user = get_userdata( $item->user_id );
+		if ( ! empty( $user ) ) { 
 			echo '<a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-member', 'user_id' => (int)$user->ID ), admin_url( 'admin.php' ) ) ) . '">' . esc_html( $user->user_login ) . '</a><br />';
 			echo esc_html( $user->user_email );
 		 } elseif ( $item->user_id > 0 ) {
@@ -292,103 +292,103 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 		} else {
 			echo '['. esc_html__( 'none', 'pmpro-abandoned-cart-recovery' ) . ']';
 		}
-    }
-
-    /**
-     * Render the token order value.
-     *
-     * @param object $item
-     */
-    public function column_token_order( $item ) {
-        self::ouptut_order_data( $item->token_order_id, $item->token_level_id, $item->token_total, $item->token_datetime );
-    }
-
-    /**
-     * Render the status value.
-     *
-     * @param object $item
-     */
-    public function column_status( $item ) {
-        if ( $item->status === 'in_progress' ) {
-            echo '<div class="pmpro_tag pmpro_tag-alert">' . esc_html__( 'In Progress', 'pmpro-abandoned-cart-recovery' ) . '</div>';
-        } elseif ( $item->status === 'recovered' ) {
-            echo '<div class="pmpro_tag pmpro_tag-success">' . esc_html__( 'Recovered', 'pmpro-abandoned-cart-recovery' ) . '</div>';
-        } elseif ( $item->status === 'lost' ) {
-            echo '<div class="pmpro_tag pmpro_tag-error">' . esc_html__( 'Lost', 'pmpro-abandoned-cart-recovery' ) . '</div>';
-        } else {
-            echo '<div class="pmpro_tag pmpro_tag-info">' . esc_html__( 'Unknown', 'pmpro-abandoned-cart-recovery' ) . '</div>';
-        }
-    }
-
-    /**
-     * Render the reminder 1 value.
-     *
-     * @param object $item
-     */
-    public function column_reminder_1( $item ) {
-        $reminder = $item->reminder_1_datetime;
-        if ( $reminder ) {
-			echo esc_html( self::format_date( $reminder ) );
-        } else {
-            esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
-        }
-    }
-
-    /**
-     * Render the reminder 2 value.
-     *
-     * @param object $item
-     */
-    public function column_reminder_2( $item ) {
-        $reminder = $item->reminder_2_datetime;
-        if ( $reminder ) {
-			// Output the reminder date in the site's local time and date format and the correct timezone.
-			echo esc_html( self::format_date( $reminder ) );
-        } else {
-            esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
-        }
-    }
-
-    /**
-     * Render the reminder 3 value.
-     *
-     * @param object $item
-     */
-    public function column_reminder_3( $item ) {
-        $reminder = $item->reminder_3_datetime;
-        if ( $reminder ) {
-			echo esc_html( self::format_date( $reminder ) );
-        } else {
-            esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
-        }
-    }
+	}
 
 	/**
-     * Render the recovered order value.
-     *
-     * @param object $item
-     */
-    public function column_recovered_order( $item ) {
-        if ( ! empty( $item->recovered_order_id ) ) {
-            self::ouptut_order_data( $item->recovered_order_id, $item->recovered_level_id, $item->recovered_total, $item->recovered_datetime );
-        } else {
-            esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
-        }
-    }
+	 * Render the token order value.
+	 *
+	 * @param object $item
+	 */
+	public function column_token_order( $item ) {
+		self::ouptut_order_data( $item->token_order_id, $item->token_level_id, $item->token_total, $item->token_datetime );
+	}
 
-    /**
-     * Helper function to output an order's timestamp, level, and total.
-     *
-     * @param int $order_id The order ID.
-     */
-    public static function ouptut_order_data( $order_id, $level_id, $total, $datetime ) {
-        $level = pmpro_getLevel( $level_id );
-        $level_name = ! empty( $level ) ? $level->name : '#' . $level_id;
-        echo '<p>' . esc_html( sprintf( __( 'Level: %s (%s)', 'pmpro-abandoned-cart-recovery' ), $level_name, pmpro_formatPrice( $total ) ) ) . '</p>';
+	/**
+	 * Render the status value.
+	 *
+	 * @param object $item
+	 */
+	public function column_status( $item ) {
+		if ( $item->status === 'in_progress' ) {
+			echo '<div class="pmpro_tag pmpro_tag-alert">' . esc_html__( 'In Progress', 'pmpro-abandoned-cart-recovery' ) . '</div>';
+		} elseif ( $item->status === 'recovered' ) {
+			echo '<div class="pmpro_tag pmpro_tag-success">' . esc_html__( 'Recovered', 'pmpro-abandoned-cart-recovery' ) . '</div>';
+		} elseif ( $item->status === 'lost' ) {
+			echo '<div class="pmpro_tag pmpro_tag-error">' . esc_html__( 'Lost', 'pmpro-abandoned-cart-recovery' ) . '</div>';
+		} else {
+			echo '<div class="pmpro_tag pmpro_tag-info">' . esc_html__( 'Unknown', 'pmpro-abandoned-cart-recovery' ) . '</div>';
+		}
+	}
+
+	/**
+	 * Render the reminder 1 value.
+	 *
+	 * @param object $item
+	 */
+	public function column_reminder_1( $item ) {
+		$reminder = $item->reminder_1_datetime;
+		if ( $reminder ) {
+			echo esc_html( self::format_date( $reminder ) );
+		} else {
+			esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
+		}
+	}
+
+	/**
+	 * Render the reminder 2 value.
+	 *
+	 * @param object $item
+	 */
+	public function column_reminder_2( $item ) {
+		$reminder = $item->reminder_2_datetime;
+		if ( $reminder ) {
+			// Output the reminder date in the site's local time and date format and the correct timezone.
+			echo esc_html( self::format_date( $reminder ) );
+		} else {
+			esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
+		}
+	}
+
+	/**
+	 * Render the reminder 3 value.
+	 *
+	 * @param object $item
+	 */
+	public function column_reminder_3( $item ) {
+		$reminder = $item->reminder_3_datetime;
+		if ( $reminder ) {
+			echo esc_html( self::format_date( $reminder ) );
+		} else {
+			esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
+		}
+	}
+
+	/**
+	 * Render the recovered order value.
+	 *
+	 * @param object $item
+	 */
+	public function column_recovered_order( $item ) {
+		if ( ! empty( $item->recovered_order_id ) ) {
+			self::ouptut_order_data( $item->recovered_order_id, $item->recovered_level_id, $item->recovered_total, $item->recovered_datetime );
+		} else {
+			esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
+		}
+	}
+
+	/**
+	 * Helper function to output an order's timestamp, level, and total.
+	 *
+	 * @param int $order_id The order ID.
+	 */
+	public static function ouptut_order_data( $order_id, $level_id, $total, $datetime ) {
+		$level = pmpro_getLevel( $level_id );
+		$level_name = ! empty( $level ) ? $level->name : '#' . $level_id;
+		echo '<p>' . esc_html( sprintf( __( 'Level: %s (%s)', 'pmpro-abandoned-cart-recovery' ), $level_name, pmpro_formatPrice( $total ) ) ) . '</p>';
 		echo '<p>' . esc_html( self::format_date( $datetime ) ) . '</p>';
 		// Show an edit link.
 		echo '<p><a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-orders', 'order' => $order_id ), admin_url( 'admin.php' ) ) ) . '">' . esc_html__( 'View Order', 'pmpro-abandoned-cart-recovery' ) . '</a></p>';
-    }
+	}
 
 	/**
 	 * Format the passed date for display.

@@ -15,7 +15,7 @@ function pmproacr_after_checkout( $user_id, $order ) {
 		$wpdb->pmproacr_recovery_attempts,
 		array(
 			'status'             => 'recovered',
-			'recovered_datetime'=> current_time( 'Y-m-d H:i:s', true ),
+			'recovered_datetime' => current_time( 'Y-m-d H:i:s', true ),
 			'recovered_level_id' => $order->membership_id,
 			'recovered_total'    => $order->total,
 			'recovered_order_id' => $order->id
