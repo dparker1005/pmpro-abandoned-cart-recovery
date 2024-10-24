@@ -330,7 +330,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
         if ( $reminder ) {
 			echo esc_html( self::format_date( $reminder ) );
         } else {
-            esc_html_e( 'Not sent', 'pmpro-abandoned-cart-recovery' );
+            esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
         }
     }
 
@@ -345,7 +345,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 			// Output the reminder date in the site's local time and date format and the correct timezone.
 			echo esc_html( self::format_date( $reminder ) );
         } else {
-            esc_html_e( 'Not sent', 'pmpro-abandoned-cart-recovery' );
+            esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
         }
     }
 
@@ -359,11 +359,11 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
         if ( $reminder ) {
 			echo esc_html( self::format_date( $reminder ) );
         } else {
-            esc_html_e( 'Not sent', 'pmpro-abandoned-cart-recovery' );
+            esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
         }
     }
 
-    /**
+	/**
      * Render the recovered order value.
      *
      * @param object $item
