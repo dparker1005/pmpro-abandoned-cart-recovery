@@ -1,9 +1,11 @@
 === Paid Memberships Pro - Abandoned Cart Recovery ===
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, checkout, cart, abandoned, recovery
-Requires at least: 4
+Requires at least: 5.4
 Tested up to: 6.6
 Stable tag: 0.1
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Recover lost revenue by capturing abandoned carts and following up with customers to complete their purchase.
 
