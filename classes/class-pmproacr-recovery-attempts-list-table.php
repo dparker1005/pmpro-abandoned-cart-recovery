@@ -310,13 +310,13 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
      */
     public function column_status( $item ) {
         if ( $item->status === 'in_progress' ) {
-            esc_html_e( 'In Progress', 'pmpro-abandoned-cart-recovery' );
+            echo '<div class="pmpro_tag pmpro_tag-alert">' . esc_html__( 'In Progress', 'pmpro-abandoned-cart-recovery' ) . '</div>';
         } elseif ( $item->status === 'recovered' ) {
-            esc_html_e( 'Recovered', 'pmpro-abandoned-cart-recovery' );
+            echo '<div class="pmpro_tag pmpro_tag-success">' . esc_html__( 'Recovered', 'pmpro-abandoned-cart-recovery' ) . '</div>';
         } elseif ( $item->status === 'lost' ) {
-            esc_html_e( 'Lost', 'pmpro-abandoned-cart-recovery' );
+            echo '<div class="pmpro_tag pmpro_tag-error">' . esc_html__( 'Lost', 'pmpro-abandoned-cart-recovery' ) . '</div>';
         } else {
-            esc_html_e( 'Unknown', 'pmpro-abandoned-cart-recovery' );
+            echo '<div class="pmpro_tag pmpro_tag-info">' . esc_html__( 'Unknown', 'pmpro-abandoned-cart-recovery' ) . '</div>';
         }
     }
 
@@ -372,7 +372,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
         if ( ! empty( $item->recovered_order_id ) ) {
             self::ouptut_order_data( $item->recovered_order_id, $item->recovered_level_id, $item->recovered_total, $item->recovered_datetime );
         } else {
-            esc_html_e( 'Not recovered', 'pmpro-abandoned-cart-recovery' );
+            esc_html_e( '&#8212;', 'paid-memberships-pro' );
         }
     }
 
