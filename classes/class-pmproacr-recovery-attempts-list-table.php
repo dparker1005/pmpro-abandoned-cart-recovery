@@ -372,7 +372,7 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
         if ( ! empty( $item->recovered_order_id ) ) {
             self::ouptut_order_data( $item->recovered_order_id, $item->recovered_level_id, $item->recovered_total, $item->recovered_datetime );
         } else {
-            esc_html_e( '&#8212;', 'paid-memberships-pro' );
+            esc_html_e( '&#8212;', 'pmpro-abandoned-cart-recovery' );
         }
     }
 
