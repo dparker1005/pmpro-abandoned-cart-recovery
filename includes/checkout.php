@@ -11,6 +11,12 @@
 function pmproacr_after_checkout( $user_id, $order ) {
 	global $wpdb;
 
+	// If the order was free, don't mark the recovery attempt as recovered.
+	if ( empty( $order->total ) ) {
+		return;
+	}
+
+	// Update the recovery attempt to recovered.
 	$wpdb->update(
 		$wpdb->pmproacr_recovery_attempts,
 		array(
