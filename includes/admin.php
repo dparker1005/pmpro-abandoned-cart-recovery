@@ -36,8 +36,21 @@ function pmproacr_admin_page() {
 	require_once PMPRO_DIR . '/adminpages/admin_footer.php';
 }
 
-global $pmpro_reports;
-$pmpro_reports['pmproacr_results'] = __('Abandoned Cart Recoveries', 'pmpro-abandoned-cart-recovery');
+/**
+ * Register the Abandoned Cart Recovery report.
+ *
+ * @since TBD
+ *
+ * @param array $pmpro_reports The existing PMPro reports.
+ * @return array The modified PMPro reports with the Abandoned Cart Recovery report added.
+ */
+function pmproacr_register_report_pmproacr_results( $pmpro_reports ) {
+	$pmpro_reports['pmproacr_results'] = __( 'Abandoned Cart Recoveries', 'pmpro-abandoned-cart-recovery' );
+
+	return $pmpro_reports;
+}
+add_filter( 'pmpro_registered_reports', 'pmproacr_register_report_pmproacr_results' );
+
 /**
  * Add the Abandoned Cart Recovery report widget to the reports page.
  *
