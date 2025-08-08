@@ -1,4 +1,23 @@
 <?php
+
+/**
+ * Set up email templates.
+ *
+ * @since TBD
+ */
+function pmproacr_init_email_templates() {
+	if ( class_exists( 'PMPro_Email_Template' ) ) {
+		// Using PMPro v3.4+. Include the email template class.
+		include_once( PMPROACR_DIR . '/classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php' );
+		include_once( PMPROACR_DIR . '/classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php' );
+		include_once( PMPROACR_DIR . '/classes/email-templates/class-pmpro-email-template-pmproacr-reminder-3.php' );
+	} else {
+		// Using PMPro version under v3.4. Use the old filter.
+		add_filter( 'pmproet_templates', 'pmproacr_email_templates' );
+	}
+}
+add_action( 'init', 'pmproacr_init_email_templates', 8 ); // Priority 8 to ensure the pmproet_templates hook is added before PMPro loads email templates.
+
 /**
  * Add the reminder email templates.
  *
@@ -41,7 +60,6 @@ function pmproacr_email_templates( $templates ) {
 
 	return $templates;
 }
-add_filter( 'pmproet_templates', 'pmproacr_email_templates' );
 
 /**
  * Send a reminder email.
@@ -56,24 +74,31 @@ function pmproacr_send_reminder_email( $recovery_attempt, $reminder_number ) {
 	$user  = get_userdata( $recovery_attempt->user_id );
 	$level = pmpro_getLevel( $recovery_attempt->token_level_id );
 
-	// Send the email.
-	$email           = new PMProEmail();
-	$email->template = 'pmproacr_reminder_' . $reminder_number;
-	$email->email    = $user->user_email;
-	$email->data     = array(
-		'user_login' => $user->user_login,
-		'user_email' => $user->user_email,
-		'display_name' => $user->display_name,
-		'header_name' => $user->display_name,
-		'sitename' => get_option('blogname'),
-		'siteemail' => get_option('pmpro_from_email'),
-		'login_link' => pmpro_login_url(),
-		'login_url' => pmpro_login_url(),
-		'membership_id' => $level->id,
-		'membership_level_name' => $level->name,
-		'checkout_url' => pmpro_login_url( pmpro_url( 'checkout', '?pmpro_level=' . $level->id ) ),
-		'levels_url' => pmpro_login_url( pmpro_url( 'levels' ) ),
-		'opt_out_url' => add_query_arg( 'pmproacr_opt_out', urlencode( $user->user_email ), home_url() ),
-	);
-	$email->sendEmail();
+	$template_class = 'PMPro_Email_Template_PMProACR_Reminder_' . $reminder_number;
+	if ( class_exists( $template_class ) ) {
+		// Using PMPro v3.4+. Create an instance of the email template class.
+		$email_template = new $template_class( $user, $level );
+		$email_template->send();
+	} else {
+		// Using PMPro version under v3.4. Use the legacy logic.
+		$email           = new PMProEmail();
+		$email->template = 'pmproacr_reminder_' . $reminder_number;
+		$email->email    = $user->user_email;
+		$email->data     = array(
+			'user_login' => $user->user_login,
+			'user_email' => $user->user_email,
+			'display_name' => $user->display_name,
+			'header_name' => $user->display_name,
+			'sitename' => get_option('blogname'),
+			'siteemail' => get_option('pmpro_from_email'),
+			'login_link' => pmpro_login_url(),
+			'login_url' => pmpro_login_url(),
+			'membership_id' => $level->id,
+			'membership_level_name' => $level->name,
+			'checkout_url' => pmpro_login_url( pmpro_url( 'checkout', '?pmpro_level=' . $level->id ) ),
+			'levels_url' => pmpro_login_url( pmpro_url( 'levels' ) ),
+			'opt_out_url' => add_query_arg( 'pmproacr_opt_out', urlencode( $user->user_email ), home_url() ),
+		);
+		$email->sendEmail();
+	}
 }
