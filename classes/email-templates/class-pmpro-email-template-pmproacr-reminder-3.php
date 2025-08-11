@@ -156,7 +156,15 @@ class PMPro_Email_Template_PMProACR_Reminder_3 extends PMPro_Email_Template {
 		global $current_user;
 		$test_user = $current_user;
 		$all_levels = pmpro_getAllLevels( true );
-		$test_user->membership_level = array_pop( $all_levels );
+		if ( ! empty( $all_levels ) ) {
+			$test_user->membership_level = array_pop( $all_levels );
+		} else {
+			// Provide a default membership level object if none exist.
+			$default_level = new stdClass();
+			$default_level->id = 1;
+			$default_level->name = 'Test Level';
+			$test_user->membership_level = $default_level;
+		}
 		return array( $test_user, $test_user->membership_level );
 	}
 }
