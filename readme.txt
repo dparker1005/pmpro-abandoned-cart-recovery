@@ -2,8 +2,8 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, cart, abandoned, recovery
 Requires at least: 5.4
-Tested up to: 6.7
-Stable tag: 0.1
+Tested up to: 6.8
+Stable tag: 1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,11 @@ The Abandoned Cart Recovery Add On helps maximize your membership site's revenue
 Please post it in the issues section of GitHub and we'll fix it as soon as we can. Thanks for helping. https://github.com/strangerstudios/pmpro-abandoned-cart-recovery/issues
 
 == Changelog ==
+
+= 1.0 - 2025-08-11 =
+* ENHANCEMENT: Now allowing sending test emails when editing email templates. #8 (@dparker1005)
+* ENHANCEMENT: Now showing all available email template variables when editing email templates. #8 (@dparker1005)
+* BUG FIX: Fixed PHP notices that would be logged when the plugin is active. #6, #9 (@MaximilianoRicoTabo, @dparker1005)
 
 = 0.1 - 2024-12-24 =
 * Initial release

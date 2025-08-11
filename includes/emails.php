@@ -3,7 +3,7 @@
 /**
  * Set up email templates.
  *
- * @since TBD
+ * @since 1.0
  */
 function pmproacr_init_email_templates() {
 	if ( class_exists( 'PMPro_Email_Template' ) ) {

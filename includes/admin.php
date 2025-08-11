@@ -39,7 +39,7 @@ function pmproacr_admin_page() {
 /**
  * Register the Abandoned Cart Recovery report.
  *
- * @since TBD
+ * @since 1.0
  *
  * @param array $pmpro_reports The existing PMPro reports.
  * @return array The modified PMPro reports with the Abandoned Cart Recovery report added.
