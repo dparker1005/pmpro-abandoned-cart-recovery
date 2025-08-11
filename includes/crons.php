@@ -52,11 +52,9 @@ function pmproacr_cron_process_recovery_attempts() {
 
 	// Get all levels that have abandoned cart recovery enabled.
 	$enabled_levels = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT DISTINCT pmpro_membership_level_id
-			FROM $wpdb->pmpro_membership_levelmeta
-			WHERE meta_key = 'pmproacr_enabled_for_level' AND meta_value = 'yes'"
-		)
+		"SELECT DISTINCT pmpro_membership_level_id
+		FROM $wpdb->pmpro_membership_levelmeta
+		WHERE meta_key = 'pmproacr_enabled_for_level' AND meta_value = 'yes'"
 	);
 
 	// Send the first reminder.
