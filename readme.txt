@@ -3,7 +3,7 @@ Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, cart, abandoned, recovery
 Requires at least: 5.4
 Tested up to: 6.8
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,8 @@ The Abandoned Cart Recovery Add On helps maximize your membership site's revenue
 Please post it in the issues section of GitHub and we'll fix it as soon as we can. Thanks for helping. https://github.com/strangerstudios/pmpro-abandoned-cart-recovery/issues
 
 == Changelog ==
+= 1.0.1 - 2025-09-15 =
+* BUG FIX: Fixed a fatal error that could occur while processing recovery attempts when a user or level has been deleted. #11 (@dparker1005)
 
 = 1.0 - 2025-08-11 =
 * ENHANCEMENT: Now allowing sending test emails when editing email templates. #8 (@dparker1005)
