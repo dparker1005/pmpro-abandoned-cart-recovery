@@ -74,6 +74,12 @@ function pmproacr_send_reminder_email( $recovery_attempt, $reminder_number ) {
 	$user  = get_userdata( $recovery_attempt->user_id );
 	$level = pmpro_getLevel( $recovery_attempt->token_level_id );
 
+	// If we don't have a user or a level, bail.
+	if ( empty( $user ) || empty( $level ) ) {
+		return;
+	}
+
+	// Send the email.
 	$template_class = 'PMPro_Email_Template_PMProACR_Reminder_' . $reminder_number;
 	if ( class_exists( $template_class ) ) {
 		// Using PMPro v3.4+. Create an instance of the email template class.
