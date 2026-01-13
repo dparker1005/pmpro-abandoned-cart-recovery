@@ -43,7 +43,7 @@ function pmproacr_email_templates( $templates ) {
 
 ' . wp_kses( __( '<p><a href="!!checkout_url!!">Click here to complete membership checkout now</a>.</p>', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '
 
-<p>' . wp_kses( __( 'If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of future emails</a>', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '</p>',
+<p>' . wp_kses( __( 'If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of future emails</a>.', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '</p>',
 		'help_text'   => esc_html__( 'This email is sent as the first reminder to complete a purchase.', 'pmpro-abandoned-cart-recovery' )
 	);
 
@@ -54,7 +54,7 @@ function pmproacr_email_templates( $templates ) {
 
 <p><a href="!!checkout_url!!">' . esc_html__( 'Complete Your Purchase Now', 'pmpro-abandoned-cart-recovery' ) . '</a></p>
 
-<p>' . wp_kses( __( 'If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of these emails</a>', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '</p>',
+<p>' . wp_kses( __( 'If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of these emails</a>.', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '</p>',
 		'help_text'   => esc_html__( 'This email is sent as the second reminder to complete a purchase.', 'pmpro-abandoned-cart-recovery' )
 	);
 
