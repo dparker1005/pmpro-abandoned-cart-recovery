@@ -41,7 +41,7 @@ function pmproacr_email_templates( $templates ) {
 		'subject'     => esc_html__( 'Your membership is waiting.', 'pmpro-abandoned-cart-recovery' ),
 		'body'        => '<p>' . esc_html__( 'We noticed you started signing up for !!membership_level_name!! membership but did not complete the checkout process.', 'pmpro-abandoned-cart-recovery' ) . '</p>
 
-<p><a href="!!checkout_url!!">' . esc_html__( 'Click here to complete membership checkout now', 'pmpro-abandoned-cart-recovery' ) . '</a>.</p>
+' . wp_kses( __( '<p><a href="!!checkout_url!!">Click here to complete membership checkout now</a>.</p>', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '
 
 <p>' . wp_kses( __( 'If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of future emails</a>', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '</p>',
 		'help_text'   => esc_html__( 'This email is sent as the first reminder to complete a purchase.', 'pmpro-abandoned-cart-recovery' )
