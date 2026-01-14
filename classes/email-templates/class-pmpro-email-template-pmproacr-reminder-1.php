@@ -78,11 +78,20 @@ class PMPro_Email_Template_PMProACR_Reminder_1 extends PMPro_Email_Template {
 	 * @return string The default body content for the email.
 	 */
 	public static function get_default_body() {
+		// Allowed strings for kses checks below.
+		$allowed_html = array(
+			'a' => array(
+				'href' => array(),
+				'title' => array(),
+			),
+			'p' => array(),
+		);
+
 		return '<p>' . esc_html__( 'We noticed you started signing up for !!membership_level_name!! membership but did not complete the checkout process.', 'pmpro-abandoned-cart-recovery' ) . '</p>
 
-<p><a href="!!checkout_url!!">' . esc_html__( 'Click here to complete membership checkout now', 'pmpro-abandoned-cart-recovery' ) . '</a>.</p>
+' . wp_kses( __( '<p><a href="!!checkout_url!!">Click here to complete membership checkout now</a>.</p>', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '
 
-<p>If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">' . esc_html__( 'click here to opt out of future emails', 'pmpro-abandoned-cart-recovery' ) . '</a>.</p>'; 
+' . wp_kses( __( '<p>If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of future emails</a>.</p>', 'pmpro-abandoned-cart-recovery' ), $allowed_html );
 	}
 
 	/**

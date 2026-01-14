@@ -27,14 +27,23 @@ add_action( 'init', 'pmproacr_init_email_templates', 8 ); // Priority 8 to ensur
  * @return array The email templates.
  */
 function pmproacr_email_templates( $templates ) {
+	// Allowed strings for kses checks below.
+	$allowed_html = array(
+		'a' => array(
+			'href' => array(),
+			'title' => array(),
+		),
+		'p' => array(),
+	);
+
 	$templates['pmproacr_reminder_1'] = array(
 		'description' => esc_html__( 'Abandoned Cart Recovery - Reminder 1', 'pmpro-abandoned-cart-recovery' ),
 		'subject'     => esc_html__( 'Your membership is waiting.', 'pmpro-abandoned-cart-recovery' ),
 		'body'        => '<p>' . esc_html__( 'We noticed you started signing up for !!membership_level_name!! membership but did not complete the checkout process.', 'pmpro-abandoned-cart-recovery' ) . '</p>
 
-<p><a href="!!checkout_url!!">' . esc_html__( 'Click here to complete membership checkout now', 'pmpro-abandoned-cart-recovery' ) . '</a>.</p>
+' . wp_kses( __( '<p><a href="!!checkout_url!!">Click here to complete membership checkout now</a>.</p>', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '
 
-<p>If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">' . esc_html__( 'click here to opt out of future emails', 'pmpro-abandoned-cart-recovery' ) . '</a>.</p>',
+<p>' . wp_kses( __( 'If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of future emails</a>.', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '</p>',
 		'help_text'   => esc_html__( 'This email is sent as the first reminder to complete a purchase.', 'pmpro-abandoned-cart-recovery' )
 	);
 
@@ -45,7 +54,7 @@ function pmproacr_email_templates( $templates ) {
 
 <p><a href="!!checkout_url!!">' . esc_html__( 'Complete Your Purchase Now', 'pmpro-abandoned-cart-recovery' ) . '</a></p>
 
-<p>If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">' . esc_html__( 'click here to opt out of these emails', 'pmpro-abandoned-cart-recovery' ) . '</a>.</p>',
+<p>' . wp_kses( __( 'If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of these emails</a>.', 'pmpro-abandoned-cart-recovery' ), $allowed_html ) . '</p>',
 		'help_text'   => esc_html__( 'This email is sent as the second reminder to complete a purchase.', 'pmpro-abandoned-cart-recovery' )
 	);
 
