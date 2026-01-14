@@ -1,15 +1,15 @@
-# Copyright (C) 2025 Paid Memberships Pro
+# Copyright (C) 2026 Paid Memberships Pro
 # This file is distributed under the GPL-3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Paid Memberships Pro - Abandoned Cart Recovery 1.0.1\n"
+"Project-Id-Version: Paid Memberships Pro - Abandoned Cart Recovery 1.0.2\n"
 "Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
 "Last-Translator: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "Language-Team: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-15T14:07:14+00:00\n"
+"POT-Creation-Date: 2026-01-14T10:29:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: pmpro-abandoned-cart-recovery\n"
@@ -116,100 +116,98 @@ msgstr ""
 msgid "Level: %1$s (%2$s)"
 msgstr ""
 
-#: classes/class-pmproacr-recovery-attempts-list-table.php:395
+#: classes/class-pmproacr-recovery-attempts-list-table.php:399
 msgid "View Order"
 msgstr ""
 
 #. translators: %1$s is the date and %2$s is the time.
-#: classes/class-pmproacr-recovery-attempts-list-table.php:407
+#: classes/class-pmproacr-recovery-attempts-list-table.php:411
 #, php-format
 msgid "%1$s at %2$s"
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:48
-#: includes/emails.php:31
+#: includes/emails.php:40
 msgid "Abandoned Cart Recovery - Reminder 1"
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:59
-#: includes/emails.php:38
+#: includes/emails.php:47
 msgid "This email is sent as the first reminder to complete a purchase."
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:70
-#: includes/emails.php:32
+#: includes/emails.php:41
 msgid "Your membership is waiting."
 msgstr ""
 
-#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:81
-#: includes/emails.php:33
+#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:90
+#: includes/emails.php:42
 msgid "We noticed you started signing up for !!membership_level_name!! membership but did not complete the checkout process."
 msgstr ""
 
-#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:83
-#: includes/emails.php:35
-msgid "Click here to complete membership checkout now"
+#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:92
+#: includes/emails.php:44
+msgid "<p><a href=\"!!checkout_url!!\">Click here to complete membership checkout now</a>.</p>"
 msgstr ""
 
-#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:85
-#: includes/emails.php:37
-msgid "click here to opt out of future emails"
+#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:94
+msgid "<p>If you do not want to receive any more emails about this attempted checkout, <a href=\"!!opt_out_url!!\">click here to opt out of future emails</a>.</p>"
 msgstr ""
 
-#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:167
-#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:167
+#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-1.php:176
+#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:176
 msgid "Default Level"
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:48
-#: includes/emails.php:42
+#: includes/emails.php:51
 msgid "Abandoned Cart Recovery - Reminder 2"
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:59
-#: includes/emails.php:49
+#: includes/emails.php:58
 msgid "This email is sent as the second reminder to complete a purchase."
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:70
-#: includes/emails.php:43
+#: includes/emails.php:52
 msgid "Reminder: Your !!sitename!! membership is waiting."
 msgstr ""
 
-#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:81
-#: includes/emails.php:44
+#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:90
+#: includes/emails.php:53
 msgid "It looks like you may have forgotten to complete checkout for the !!membership_level_name!! membership at !!sitename!!."
 msgstr ""
 
-#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:83
+#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:92
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-3.php:83
-#: includes/emails.php:46
-#: includes/emails.php:57
+#: includes/emails.php:55
+#: includes/emails.php:66
 msgid "Complete Your Purchase Now"
 msgstr ""
 
-#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:85
-#: includes/emails.php:48
-msgid "click here to opt out of these emails"
+#: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-2.php:94
+msgid "<p>If you do not want to receive any more emails about this attempted checkout, <a href=\"!!opt_out_url!!\">click here to opt out of these emails</a>.</p>"
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-3.php:48
-#: includes/emails.php:53
+#: includes/emails.php:62
 msgid "Abandoned Cart Recovery - Reminder 3"
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-3.php:59
-#: includes/emails.php:58
+#: includes/emails.php:67
 msgid "This email is sent as the third reminder to complete a purchase."
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-3.php:70
-#: includes/emails.php:54
+#: includes/emails.php:63
 msgid "Final Reminder: Complete membership checkout at !!sitename!! today."
 msgstr ""
 
 #: classes/email-templates/class-pmpro-email-template-pmproacr-reminder-3.php:81
-#: includes/emails.php:55
+#: includes/emails.php:64
 msgid "This is your final reminder to complete your !!membership_level_name!! membership checkout at !!sitename!!."
 msgstr ""
 
@@ -246,6 +244,14 @@ msgstr ""
 
 #: includes/admin.php:88
 msgid "All Time"
+msgstr ""
+
+#: includes/emails.php:46
+msgid "If you do not want to receive any more emails about this attempted checkout, <a href=\"!!opt_out_url!!\">click here to opt out of future emails</a>."
+msgstr ""
+
+#: includes/emails.php:57
+msgid "If you do not want to receive any more emails about this attempted checkout, <a href=\"!!opt_out_url!!\">click here to opt out of these emails</a>."
 msgstr ""
 
 #: includes/level-settings.php:24
