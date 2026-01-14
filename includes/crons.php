@@ -57,6 +57,11 @@ function pmproacr_cron_process_recovery_attempts() {
 		WHERE meta_key = 'pmproacr_enabled_for_level' AND meta_value = 'yes'"
 	);
 
+	// No levels have abandoned cart recovery enabled, so nothing to do.
+	if ( empty( $enabled_levels ) ) {
+		return;
+	}
+
 	// Send the first reminder.
 	// Get all token orders older than the current time - seconds_until_reminder_1 but after the last timestamp checked.
 	// To help with performance and to avoid confusing customers, let's limit the "last timestamp checked" to at most $seconds_until_reminder_1 * 4 in the past.
