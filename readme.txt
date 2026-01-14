@@ -31,6 +31,11 @@ The Abandoned Cart Recovery Add On helps maximize your membership site's revenue
 Please post it in the issues section of GitHub and we'll fix it as soon as we can. Thanks for helping. https://github.com/strangerstudios/pmpro-abandoned-cart-recovery/issues
 
 == Changelog ==
+= 1.0.2 - 2026-01-14 =
+* BUG FIX/ENHANCEMENT: Better localization support in default email templates. #15 (@ideadude)
+* BUG FIX: Fixes a fatal error when Abandoned Cart Recovery has no levels selected during cron execution. #16 (@andrewlimaza)
+* BUG FIX: Fixing broken link to view orders when running PMPro v3.6+. #14 (@dparker1005)
+
 = 1.0.1 - 2025-09-15 =
 * BUG FIX: Fixed a fatal error that could occur while processing recovery attempts when a user or level has been deleted. #11 (@dparker1005)
 

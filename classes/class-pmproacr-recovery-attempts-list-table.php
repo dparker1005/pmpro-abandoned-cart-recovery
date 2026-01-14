@@ -391,8 +391,12 @@ class PMProACR_Recovery_Attempts_List_Table extends WP_List_Table {
 			pmpro_formatPrice( $total )
 		) ) . '</p>';
 		echo '<p>' . esc_html( self::format_date( $datetime ) ) . '</p>';
+		
+		// Check PMPRo version, anything before 3.6 used 'order' parameter, 3.6+ uses 'id' parameter.
+		$order_id_param = version_compare( PMPRO_VERSION, '3.6', '>=' ) ? 'id' : 'order';
+		
 		// Show an edit link.
-		echo '<p><a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-orders', 'order' => $order_id, 'id' => $order_id ), admin_url( 'admin.php' ) ) ) . '">' . esc_html__( 'View Order', 'pmpro-abandoned-cart-recovery' ) . '</a></p>';
+		echo '<p><a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-orders', $order_id_param => $order_id ), admin_url( 'admin.php' ) ) ) . '">' . esc_html__( 'View Order', 'pmpro-abandoned-cart-recovery' ) . '</a></p>';
 	}
 
 	/**
