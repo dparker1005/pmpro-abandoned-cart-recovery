@@ -302,3 +302,20 @@ function pmproacr_deactivation() {
 	wp_clear_scheduled_hook( 'pmproacr_cron_process_recovery_attempts' );
 }
 register_deactivation_hook( PMPROACR_BASE_FILE, 'pmproacr_deactivation' );
+
+
+/**
+ * Integrate with Action Scheduler instead of crons if PMPro version is 3.5+
+ * 
+ * @since TBD
+ */
+function pmproacr_schedule_recovery_attempts_with_action_scheduler() {
+	if ( class_exists( 'PMPro_Recurring_Actions' ) ) {
+		// Remove the crons that may have been set up previously (for older PMPro installs) to avoid duplicate code running.
+		wp_clear_scheduled_hook( 'pmproacr_cron_process_recovery_attempts' );
+
+		// Move this to Action scheduler instead.
+		add_action( 'pmpro_schedule_hourly', 'pmproacr_cron_process_recovery_attempts', 98 );			
+	}
+}
+add_action( 'init', 'pmproacr_schedule_recovery_attempts_with_action_scheduler' );
