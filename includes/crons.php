@@ -314,7 +314,7 @@ register_deactivation_hook( PMPROACR_BASE_FILE, 'pmproacr_deactivation' );
 /**
  * Integrate with Action Scheduler instead of WP-cron when PMPro 3.5+ is active.
  *
- * @since TBD
+ * @since 1.0.3
  */
 function pmproacr_schedule_recovery_attempts_with_action_scheduler() {
 	if ( ! class_exists( 'PMPro_Recurring_Actions' ) ) {
