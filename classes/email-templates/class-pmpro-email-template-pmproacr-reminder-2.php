@@ -67,7 +67,11 @@ class PMPro_Email_Template_PMProACR_Reminder_2 extends PMPro_Email_Template {
 	 * @return string The default subject for the email.
 	 */
 	public static function get_default_subject() {
-		return esc_html__( "Reminder: Your !!sitename!! membership is waiting.", 'pmpro-abandoned-cart-recovery' );
+		if ( ! class_exists( 'PMPro_Liquid_Renderer' ) ) {
+			// Running a version of PMPro before liquid email rendering was available.
+			return esc_html__( "Reminder: Your !!sitename!! membership is waiting.", 'pmpro-abandoned-cart-recovery' );
+		}
+		return esc_html__( "Reminder: Your {{ sitename }} membership is waiting.", 'pmpro-abandoned-cart-recovery' );
 	}
 
 	/**
@@ -87,11 +91,19 @@ class PMPro_Email_Template_PMProACR_Reminder_2 extends PMPro_Email_Template {
 			'p' => array(),
 		);
 
-		return '<p>' . esc_html__( 'It looks like you may have forgotten to complete checkout for the !!membership_level_name!! membership at !!sitename!!.', 'pmpro-abandoned-cart-recovery' ) . '</p>
+		if ( ! class_exists( 'PMPro_Liquid_Renderer' ) ) {
+			// Running a version of PMPro before liquid email rendering was available.
+			return '<p>' . esc_html__( 'It looks like you may have forgotten to complete checkout for the !!membership_level_name!! membership at !!sitename!!.', 'pmpro-abandoned-cart-recovery' ) . '</p>
 
 <p><a href="!!checkout_url!!">' . esc_html__( 'Complete Your Purchase Now', 'pmpro-abandoned-cart-recovery' ) . '</a></p>
 
 ' . wp_kses( __( '<p>If you do not want to receive any more emails about this attempted checkout, <a href="!!opt_out_url!!">click here to opt out of these emails</a>.</p>', 'pmpro-abandoned-cart-recovery' ), $allowed_html );
+		}
+		return '<p>' . esc_html__( 'It looks like you may have forgotten to complete checkout for the {{ membership_level_name }} membership at {{ sitename }}.', 'pmpro-abandoned-cart-recovery' ) . '</p>
+
+<p><a href="{{ checkout_url }}">' . esc_html__( 'Complete Your Purchase Now', 'pmpro-abandoned-cart-recovery' ) . '</a></p>
+
+' . wp_kses( __( '<p>If you do not want to receive any more emails about this attempted checkout, <a href="{{ opt_out_url }}">click here to opt out of these emails</a>.</p>', 'pmpro-abandoned-cart-recovery' ), $allowed_html );
 	}
 
 	/**
@@ -125,14 +137,26 @@ class PMPro_Email_Template_PMProACR_Reminder_2 extends PMPro_Email_Template {
 	 * @return array The email template variables for the email (key => value pairs).
 	 */
 	public static function get_email_template_variables_with_description() {
+		if ( ! class_exists( 'PMPro_Liquid_Renderer' ) ) {
+			// Running a version of PMPro before liquid email rendering was available.
+			return array(
+				'!!display_name!!' => esc_html__( 'The display name of the user.', 'paid-memberships-pro' ),
+				'!!user_login!!' => esc_html__( 'The username of the user.', 'paid-memberships-pro' ),
+				'!!user_email!!' => esc_html__( 'The email address of the user.', 'paid-memberships-pro' ),
+				'!!membership_id!!' => esc_html__( 'The ID of the membership level.', 'paid-memberships-pro' ),
+				'!!membership_level_name!!' => esc_html__( 'The name of the membership level.', 'paid-memberships-pro' ),
+				'!!checkout_url!!' => esc_html__( 'The URL to the checkout page with the membership level pre-selected.', 'paid-memberships-pro' ),
+				'!!opt_out_url!!' => esc_html__( 'The URL the user can click to opt out of future abandoned cart emails.', 'paid-memberships-pro' ),
+			);
+		}
 		return array(
-			'!!display_name!!' => esc_html__( 'The display name of the user.', 'paid-memberships-pro' ),
-			'!!user_login!!' => esc_html__( 'The username of the user.', 'paid-memberships-pro' ),
-			'!!user_email!!' => esc_html__( 'The email address of the user.', 'paid-memberships-pro' ),
-			'!!membership_id!!' => esc_html__( 'The ID of the membership level.', 'paid-memberships-pro' ),
-			'!!membership_level_name!!' => esc_html__( 'The name of the membership level.', 'paid-memberships-pro' ),
-			'!!checkout_url!!' => esc_html__( 'The URL to the checkout page with the membership level pre-selected.', 'paid-memberships-pro' ),
-            '!!opt_out_url!!' => esc_html__( 'The URL the user can click to opt out of future abandoned cart emails.', 'paid-memberships-pro' ),
+			'{{ display_name }}' => esc_html__( 'The display name of the user.', 'paid-memberships-pro' ),
+			'{{ user_login }}' => esc_html__( 'The username of the user.', 'paid-memberships-pro' ),
+			'{{ user_email }}' => esc_html__( 'The email address of the user.', 'paid-memberships-pro' ),
+			'{{ membership_id }}' => esc_html__( 'The ID of the membership level.', 'paid-memberships-pro' ),
+			'{{ membership_level_name }}' => esc_html__( 'The name of the membership level.', 'paid-memberships-pro' ),
+			'{{ checkout_url }}' => esc_html__( 'The URL to the checkout page with the membership level pre-selected.', 'paid-memberships-pro' ),
+			'{{ opt_out_url }}' => esc_html__( 'The URL the user can click to opt out of future abandoned cart emails.', 'paid-memberships-pro' ),
 		);
 	}
 
