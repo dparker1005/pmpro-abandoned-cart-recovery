@@ -281,11 +281,18 @@ function pmproacr_cron_process_recovery_attempts() {
 add_action( 'pmproacr_cron_process_recovery_attempts', 'pmproacr_cron_process_recovery_attempts' );
 
 /**
- * Schedule the cron job.
+ * Schedule the WP-cron job for sites running PMPro <3.5.
+ *
+ * On PMPro 3.5+ the recovery sweep runs via Action Scheduler instead, so we
+ * skip scheduling a WP-cron event entirely.
  *
  * @since 0.1
  */
 function pmproacr_activation() {
+	if ( class_exists( 'PMPro_Recurring_Actions' ) ) {
+		return;
+	}
+
 	$next = wp_next_scheduled( 'pmproacr_cron_process_recovery_attempts' );
 	if ( ! $next ) {
 		wp_schedule_event( time(), 'hourly', 'pmproacr_cron_process_recovery_attempts' );
@@ -305,21 +312,21 @@ register_deactivation_hook( PMPROACR_BASE_FILE, 'pmproacr_deactivation' );
 
 
 /**
- * Integrate with Action Scheduler instead of crons if PMPro version is 3.5+
- * 
+ * Integrate with Action Scheduler instead of WP-cron when PMPro 3.5+ is active.
+ *
  * @since TBD
  */
 function pmproacr_schedule_recovery_attempts_with_action_scheduler() {
-	if ( class_exists( 'PMPro_Recurring_Actions' ) ) {
-		// Remove the crons that may have been set up previously (for older PMPro installs) to avoid duplicate code running.
-		$has_migrated = get_option( 'pmproacr_migrated_to_action_scheduler', false );
-		if ( ! $has_migrated ) {
-			wp_clear_scheduled_hook( 'pmproacr_cron_process_recovery_attempts' );
-			update_option( 'pmproacr_migrated_to_action_scheduler', 1 );
-		}
-
-		// Move this to Action scheduler instead.
-		add_action( 'pmpro_schedule_hourly', 'pmproacr_cron_process_recovery_attempts', 98 );			
+	if ( ! class_exists( 'PMPro_Recurring_Actions' ) ) {
+		return;
 	}
+
+	// Clear any legacy WP-cron event from a pre-3.5 install. Idempotent.
+	wp_clear_scheduled_hook( 'pmproacr_cron_process_recovery_attempts' );
+
+	// Run the recovery sweep on PMPro's hourly Action Scheduler hook. Use a late priority
+	// so lighter callbacks on the same hook run first within the Action Scheduler batch
+	// (matches the pattern used by other PMPro email-sending recurring callbacks).
+	add_action( 'pmpro_schedule_hourly', 'pmproacr_cron_process_recovery_attempts', 98 );
 }
 add_action( 'init', 'pmproacr_schedule_recovery_attempts_with_action_scheduler' );
