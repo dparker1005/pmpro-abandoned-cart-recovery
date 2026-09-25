@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Process opt-out requests.
  *
@@ -14,7 +18,7 @@ function pmproacr_process_opt_out() {
 
 	// $_REQUEST['pmproacr_opt_out'] is the email address to opt out.
 	// We need to get the user ID from the email address.
-	$user = get_user_by( 'email', stripslashes( sanitize_email( $_REQUEST['pmproacr_opt_out'] ) ) );
+	$user = get_user_by( 'email', sanitize_email( wp_unslash( $_REQUEST['pmproacr_opt_out'] ) ) );
 	if ( ! $user ) {
 		// Show a banner that the opt-out has failed.
 		add_action( 'wp_footer', 'pmproacr_show_opt_out_failed_banner' );
@@ -25,7 +29,7 @@ function pmproacr_process_opt_out() {
 	update_user_meta( $user->ID, 'pmproacr_opt_out', 11 );
 
 	// Mark all in-progress recovery attempts as lost.
-	$wpdb->update(
+	$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table.
 		$wpdb->pmproacr_recovery_attempts,
 		array( 'status' => 'lost' ),
 		array( 'user_id' => $user->ID, 'status' => 'in_progress' )
@@ -43,7 +47,7 @@ add_action( 'wp', 'pmproacr_process_opt_out' );
  */
 function pmproacr_show_opt_out_banner() {
 	// $_REQUEST['pmproacr_opt_out'] is the email address to opt out.
-	$email = stripslashes( sanitize_email( $_REQUEST['pmproacr_opt_out'] ) );
+	$email = sanitize_email( wp_unslash( $_REQUEST['pmproacr_opt_out'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Display only; this callback is only hooked after pmproacr_process_opt_out() confirmed the value is set.
 
 	// Show the banner.
 	?>
@@ -64,7 +68,7 @@ function pmproacr_show_opt_out_banner() {
  */
 function pmproacr_show_opt_out_failed_banner() {
 	// $_REQUEST['pmproacr_opt_out'] is the email address to opt out.
-	$email = stripslashes( sanitize_email( $_REQUEST['pmproacr_opt_out'] ) );
+	$email = sanitize_email( wp_unslash( $_REQUEST['pmproacr_opt_out'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Display only; this callback is only hooked after pmproacr_process_opt_out() confirmed the value is set.
 
 	// Show the banner.
 	?>
