@@ -63,6 +63,7 @@ function pmproacr_cron_process_recovery_attempts() {
 		FROM $wpdb->pmpro_membership_levelmeta
 		WHERE meta_key = 'pmproacr_enabled_for_level' AND meta_value = 'yes'"
 	);
+	$enabled_levels = array_map( 'intval', $enabled_levels );
 
 	// No levels have abandoned cart recovery enabled, so nothing to do.
 	if ( empty( $enabled_levels ) ) {
@@ -76,7 +77,7 @@ function pmproacr_cron_process_recovery_attempts() {
 	$reminder_1_datetime_lower_bound     = get_gmt_from_date( date( 'Y-m-d H:i:s', current_time( 'timestamp' ) - $seconds_until_reminder_1 * 4 ), 'Y-m-d H:i:s' );
 	$reminder_1_oldest_datetime          = max( $reminder_1_datetime_lower_bound, $reminder_1_last_datetime_checked );
 	$reminder_1_newest_datetime          = get_gmt_from_date( date( 'Y-m-d H:i:s', current_time( 'timestamp' ) - $seconds_until_reminder_1 ), 'Y-m-d H:i:s' );
-	// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $enabled_levels are level IDs read from an integer column.
+	// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $enabled_levels are cast to integers above.
 	$reminder_1_token_orders             = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT o.id, o.user_id, o.membership_id, o.total, o.timestamp
@@ -113,7 +114,7 @@ function pmproacr_cron_process_recovery_attempts() {
 		}
 
 		// Get all orders for the user from the past $seconds_until_reminder_1 * 4 seconds.
-		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $enabled_levels are level IDs read from an integer column.
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $enabled_levels are cast to integers above.
 		$user_orders = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT o.id, o.user_id, o.membership_id, o.total, o.timestamp, o.status
