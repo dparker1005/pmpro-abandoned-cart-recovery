@@ -98,7 +98,7 @@ function pmproacr_show_opt_out_failed_banner() {
 	// Show the banner. Don't show the email address so that this banner can't be used to check if an email address is registered.
 	?>
 	<div class="pmproacr-opt-out-banner pmproacr-opt-out-banner-failed">
-		<p><?php esc_html_e( 'There was an error processing your opt-out request. This opt-out link is invalid or has expired.', 'pmpro-abandoned-cart-recovery' ); ?></p>
+		<p><?php esc_html_e( 'There was an error processing your opt-out request. This opt-out link is not valid.', 'pmpro-abandoned-cart-recovery' ); ?></p>
 	</div>
 	<?php
 }
