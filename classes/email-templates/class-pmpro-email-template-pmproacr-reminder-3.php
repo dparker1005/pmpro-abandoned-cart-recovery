@@ -168,7 +168,7 @@ class PMPro_Email_Template_PMProACR_Reminder_3 extends PMPro_Email_Template {
 			'membership_id' => $this->membership_level->id,
             'membership_level_name' => $this->membership_level->name,
             'checkout_url' => pmpro_login_url( pmpro_url( 'checkout', '?pmpro_level=' . $this->membership_level->id ) ),
-            'opt_out_url' => add_query_arg( 'pmproacr_opt_out', urlencode( $this->user->user_email ), home_url() ),
+            'opt_out_url' => pmproacr_get_opt_out_url( $this->user ),
 		);
 	}
 
