@@ -19,6 +19,9 @@ function pmproacr_cron_process_recovery_attempts() {
 		return;
 	}
 
+	// Make sure old opt-outs are moved to PMPro email preferences before checking them, even if no admin page has loaded since PMPro was updated.
+	pmproacr_migrate_opt_outs();
+
 	// Get settings for the cron.
 	/**
 	 * Filter the time until the first reminder.
@@ -93,14 +96,7 @@ function pmproacr_cron_process_recovery_attempts() {
 	// Loop through orders and start a recovery attempt when needed.
 	foreach ( $reminder_1_token_orders as $token_order ) {
 		// If the user has opted out of recovery attempts, then skip this order.
-		$opted_out = get_user_meta( $token_order->user_id, 'pmproacr_opt_out', true );
-
-		// Also skip if the user turned off these emails in their PMPro email preferences so that we don't track reminders that won't be sent.
-		if ( empty( $opted_out ) && function_exists( 'pmpro_get_email_template_category' ) ) {
-			$email_category = pmpro_get_email_template_category( 'pmproacr_reminder_1' );
-			$opted_out      = ! empty( $email_category ) && pmpro_is_user_opted_out_of_email_category( $token_order->user_id, $email_category );
-		}
-		if ( ! empty( $opted_out ) ) {
+		if ( pmproacr_is_user_opted_out( $token_order->user_id ) ) {
 			update_option( 'pmproacr_last_datetime_checked', $token_order->timestamp );
 			continue;
 		}
@@ -213,8 +209,8 @@ function pmproacr_cron_process_recovery_attempts() {
 		)
 	);
 	foreach( $reminder_2_recovery_attempts as $recovery_attempt ) {
-		// Check if the level for this recovery attempt is still enabled.
-		if ( ! in_array( $recovery_attempt->token_level_id, $enabled_levels ) ) {
+		// Check if the level for this recovery attempt is still enabled and the user hasn't opted out.
+		if ( ! in_array( $recovery_attempt->token_level_id, $enabled_levels ) || pmproacr_is_user_opted_out( $recovery_attempt->user_id ) ) {
 			// Update the recovery attempt.
 			$wpdb->update(
 				$wpdb->pmproacr_recovery_attempts,
@@ -251,8 +247,8 @@ function pmproacr_cron_process_recovery_attempts() {
 		)
 	);
 	foreach( $reminder_3_recovery_attempts as $recovery_attempt ) {
-		// Check if the level for this recovery attempt is still enabled.
-		if ( ! in_array( $recovery_attempt->token_level_id, $enabled_levels ) ) {
+		// Check if the level for this recovery attempt is still enabled and the user hasn't opted out.
+		if ( ! in_array( $recovery_attempt->token_level_id, $enabled_levels ) || pmproacr_is_user_opted_out( $recovery_attempt->user_id ) ) {
 			// Update the recovery attempt.
 			$wpdb->update(
 				$wpdb->pmproacr_recovery_attempts,

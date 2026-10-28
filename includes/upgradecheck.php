@@ -26,6 +26,32 @@ function pmproacr_check_for_upgrades() {
 }
 
 /**
+ * Move users who opted out with the old opt-out link to PMPro email preferences.
+ *
+ * Abandoned cart emails are in the "Offers and promotions" email category.
+ * Runs on admin_init and before the cron instead of in pmproacr_check_for_upgrades() because saving
+ * an opt-out needs pluggable functions, and waits until PMPro has email preferences.
+ *
+ * @since TBD
+ */
+function pmproacr_migrate_opt_outs() {
+	global $wpdb;
+
+	if ( get_option( 'pmproacr_db_version' ) >= 2 || ! pmproacr_use_pmpro_email_preferences() ) {
+		return;
+	}
+
+	$user_ids = $wpdb->get_col( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = 'pmproacr_opt_out'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time upgrade.
+	foreach ( $user_ids as $user_id ) {
+		pmpro_update_user_email_opt_out( (int) $user_id, 'promotional', true, 'link' );
+		delete_user_meta( (int) $user_id, 'pmproacr_opt_out' );
+	}
+
+	update_option( 'pmproacr_db_version', 2 );
+}
+add_action( 'admin_init', 'pmproacr_migrate_opt_outs' );
+
+/**
  * Make sure the DB is set up correctly.
  */
 function pmproacr_db_delta() {
