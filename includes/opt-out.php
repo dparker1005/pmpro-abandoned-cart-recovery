@@ -38,8 +38,9 @@ function pmproacr_use_pmpro_email_preferences() {
  * @return bool
  */
 function pmproacr_is_user_opted_out( $user_id ) {
-	// Old opt-outs. With PMPro email preferences, these only remain until the upgrade moves them over.
-	if ( ! empty( get_user_meta( $user_id, 'pmproacr_opt_out', true ) ) ) {
+	// Old opt-outs. With PMPro email preferences, these are only used until this site's upgrade moves them over.
+	$old_opt_outs_moved = pmproacr_use_pmpro_email_preferences() && get_option( 'pmproacr_db_version' ) >= 1.1;
+	if ( ! $old_opt_outs_moved && ! empty( get_user_meta( $user_id, 'pmproacr_opt_out', true ) ) ) {
 		return true;
 	}
 

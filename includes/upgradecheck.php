@@ -50,10 +50,14 @@ function pmproacr_migrate_opt_outs() {
 		pmpro_update_user_email_opt_out( (int) $user_id, 'promotional', true, 'link' );
 
 		// Only remove the old opt-out once the new one is saved. Otherwise, try again next time.
-		if ( pmpro_get_user_email_opt_out( (int) $user_id, 'promotional' ) ) {
-			delete_user_meta( (int) $user_id, 'pmproacr_opt_out' );
-		} else {
+		if ( ! pmpro_get_user_email_opt_out( (int) $user_id, 'promotional' ) ) {
 			$migrated_all = false;
+			continue;
+		}
+
+		// The old opt-out is shared by every site in a network, but PMPro email preferences are per site. Keep it so other sites can move it too.
+		if ( ! is_multisite() ) {
+			delete_user_meta( (int) $user_id, 'pmproacr_opt_out' );
 		}
 	}
 
