@@ -39,6 +39,7 @@ function pmproacr_use_pmpro_email_preferences() {
  */
 function pmproacr_is_user_opted_out( $user_id ) {
 	if ( pmproacr_use_pmpro_email_preferences() ) {
+		// All three reminders are in the same category.
 		$email_category = pmpro_get_email_template_category( 'pmproacr_reminder_1' );
 		return ! empty( $email_category ) && pmpro_is_user_opted_out_of_email_category( $user_id, $email_category );
 	}

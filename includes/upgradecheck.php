@@ -42,12 +42,21 @@ function pmproacr_migrate_opt_outs() {
 	}
 
 	$user_ids = $wpdb->get_col( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = 'pmproacr_opt_out'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time upgrade.
+	$migrated_all = true;
 	foreach ( $user_ids as $user_id ) {
 		pmpro_update_user_email_opt_out( (int) $user_id, 'promotional', true, 'link' );
-		delete_user_meta( (int) $user_id, 'pmproacr_opt_out' );
+
+		// Only remove the old opt-out once the new one is saved. Otherwise, try again next time.
+		if ( pmpro_get_user_email_opt_out( (int) $user_id, 'promotional' ) ) {
+			delete_user_meta( (int) $user_id, 'pmproacr_opt_out' );
+		} else {
+			$migrated_all = false;
+		}
 	}
 
-	update_option( 'pmproacr_db_version', 2 );
+	if ( $migrated_all ) {
+		update_option( 'pmproacr_db_version', 2 );
+	}
 }
 add_action( 'admin_init', 'pmproacr_migrate_opt_outs' );
 
