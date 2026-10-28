@@ -94,6 +94,12 @@ function pmproacr_cron_process_recovery_attempts() {
 	foreach ( $reminder_1_token_orders as $token_order ) {
 		// If the user has opted out of recovery attempts, then skip this order.
 		$opted_out = get_user_meta( $token_order->user_id, 'pmproacr_opt_out', true );
+
+		// Also skip if the user turned off these emails in their PMPro email preferences so that we don't track reminders that won't be sent.
+		if ( empty( $opted_out ) && function_exists( 'pmpro_get_email_template_category' ) ) {
+			$email_category = pmpro_get_email_template_category( 'pmproacr_reminder_1' );
+			$opted_out      = ! empty( $email_category ) && pmpro_is_user_opted_out_of_email_category( $token_order->user_id, $email_category );
+		}
 		if ( ! empty( $opted_out ) ) {
 			update_option( 'pmproacr_last_datetime_checked', $token_order->timestamp );
 			continue;
