@@ -19,9 +19,6 @@ function pmproacr_cron_process_recovery_attempts() {
 		return;
 	}
 
-	// Make sure old opt-outs are moved to PMPro email preferences before checking them, even if no admin page has loaded since PMPro was updated.
-	pmproacr_migrate_opt_outs();
-
 	// Get settings for the cron.
 	/**
 	 * Filter the time until the first reminder.
